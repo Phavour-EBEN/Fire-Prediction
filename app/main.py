@@ -4,7 +4,8 @@ import joblib
 import pickle
 import numpy as np
 import pandas as pd
-import pyrebase
+# import pyrebase
+import firebase_admin
 from datetime import datetime
 import os
 from config import FIREBASE_CONFIG, DEVICE_UUID
@@ -13,7 +14,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Initialize Firebase with config from environment variables
-firebase = pyrebase.initialize_app(FIREBASE_CONFIG)
+firebase = firebase_admin.initialize_app(FIREBASE_CONFIG)
 db = firebase.database()
 
 # Update model loading paths to use absolute paths
