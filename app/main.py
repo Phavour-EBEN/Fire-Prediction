@@ -5,7 +5,7 @@ import pickle
 import numpy as np
 import pandas as pd
 import firebase_admin
-from firebase_admin import credentials
+from firebase_admin import credentials, db
 from datetime import datetime
 import json
 import os
