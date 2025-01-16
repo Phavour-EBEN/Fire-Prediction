@@ -2,3 +2,4 @@ test.py
 .env
 .vercel
 __pycache__
+c.json

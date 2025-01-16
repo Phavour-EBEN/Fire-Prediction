@@ -4,18 +4,26 @@ import joblib
 import pickle
 import numpy as np
 import pandas as pd
-# import pyrebase
 import firebase_admin
+from firebase_admin import credentials
 from datetime import datetime
+import json
 import os
 from config import FIREBASE_CONFIG, DEVICE_UUID
 
 app = Flask(__name__)
 CORS(app)
 
-# Initialize Firebase with config from environment variables
-firebase = firebase_admin.initialize_app(FIREBASE_CONFIG)
-db = firebase.database()
+# # Initialize Firebase with config from environment variables
+# firebase = firebase_admin.initialize_app(FIREBASE_CONFIG)
+# db = firebase.database()
+# Read from environment variable
+cred_dict = json.loads(os.getenv('FIREBASE_SERVICE_ACCOUNT_KEY'))
+cred = credentials.Certificate(cred_dict)
+
+firebase_admin.initialize_app(cred, {
+    'databaseURL': 'https://playground-bd796.firebaseio.com'  # Your database URL
+})
 
 # Update model loading paths to use absolute paths
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
