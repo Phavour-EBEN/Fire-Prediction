@@ -4,7 +4,7 @@ import joblib
 import pickle
 import numpy as np
 import pandas as pd
-import pyrebase
+import pyrebase4 as pyrebase
 from datetime import datetime
 import os
 from config import FIREBASE_CONFIG, DEVICE_UUID
