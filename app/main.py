@@ -16,12 +16,16 @@ CORS(app)
 firebase = pyrebase.initialize_app(FIREBASE_CONFIG)
 db = firebase.database()
 
+# Update model loading paths to use absolute paths
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+model_dir = os.path.join(base_dir, 'models')
+
 # Load models
-with open("anomaly_model.pkl", 'rb') as f:
+with open(os.path.join(model_dir, "anomaly_model.pkl"), 'rb') as f:
     anomaly_model = pickle.load(f)
 print("loaded model 1 ...done!")
 
-with open("logistic_model.pkl", 'rb') as f:
+with open(os.path.join(model_dir, "logistic_model.pkl"), 'rb') as f:
     fire_model = pickle.load(f)
 print("loaded model 2 ...done!")
 
