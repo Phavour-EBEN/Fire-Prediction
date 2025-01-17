@@ -54,22 +54,25 @@ def get_latest_sensor_readings():
     Returns a dictionary with sensor values
     """
     try:
-        # Get all sensor data at once
-        sensor_ref = db.reference("RTSensorData/Device uuid:iqD78eGmo7LompLJHfZwm2").get()
-        data = sensor_ref
+        # Get reference to the RTSensorData node
+        ref = db.reference('RTSensorData')
+        # Get the device data
+        device_data = ref.child('Device uuid:iqD78eGmo7LompLJHfZwm2').get()
         
-        if not data:
-            print("No data found")
+        if not device_data:
+            print("No data found in Firebase")
             return None
+            
+        print("Retrieved data:", device_data)  # Debug print
             
         # Extract and convert sensor values
         readings = {}
         for sensor_key in FEATURE_MAPPING.keys():
-            if sensor_key in data:
+            if sensor_key in device_data:
                 try:
-                    readings[sensor_key] = float(data[sensor_key])
+                    readings[sensor_key] = float(device_data[sensor_key])
                 except ValueError:
-                    print(f"Could not convert {sensor_key} value to float: {data[sensor_key]}")
+                    print(f"Could not convert {sensor_key} value to float: {device_data[sensor_key]}")
                     continue
         
         return readings
@@ -110,6 +113,18 @@ def make_predictions(features_dict):
     except Exception as e:
         print(f"Error making predictions: {str(e)}")
         return None
+
+@app.route("/")
+def home():
+    return jsonify({
+        "message": "Fire Prediction API",
+        "endpoints": {
+            "GET /predict/latest": "Get latest predictions from sensor data",
+            "POST /predict": "Make predictions from provided data",
+            "GET /sensors/latest": "Get latest sensor readings",
+            "GET /health": "Health check"
+        }
+    })
 
 @app.route("/predict/latest", methods=["GET"])
 def predict_latest():
@@ -178,4 +193,4 @@ def health_check():
 
 if __name__ == "__main__":
     # app.run()
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 1000)))
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 10000)))
