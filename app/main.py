@@ -21,7 +21,7 @@ try:
     cred = credentials.Certificate(cred_dict)
     
     firebase_admin.initialize_app(cred, {
-        'databaseURL': 'https://playground-bd796.firebaseio.com'
+        'databaseURL': 'https://playground-bd796-default-rtdb.firebaseio.com'
     })
     print("Firebase initialized successfully")
 except Exception as e:
