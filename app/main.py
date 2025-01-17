@@ -17,6 +17,7 @@ CORS(app)
 # # Initialize Firebase with config from environment variables
 # firebase = firebase_admin.initialize_app(FIREBASE_CONFIG)
 # db = firebase.database()
+
 # Read from environment variable
 cred_dict = json.loads(os.getenv('FIREBASE_SERVICE_ACCOUNT_KEY'))
 cred = credentials.Certificate(cred_dict)
