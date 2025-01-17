@@ -14,17 +14,27 @@ from config import FIREBASE_CONFIG, DEVICE_UUID
 app = Flask(__name__)
 CORS(app)
 
-# # Initialize Firebase with config from environment variables
-# firebase = firebase_admin.initialize_app(FIREBASE_CONFIG)
-# db = firebase.database()
+# Enhanced Firebase initialization with error handling
+try:
+    cred_dict = json.loads(os.getenv('FIREBASE_SERVICE_ACCOUNT_KEY'))
+    print("Firebase credentials loaded successfully")
+    cred = credentials.Certificate(cred_dict)
+    
+    firebase_admin.initialize_app(cred, {
+        'databaseURL': 'https://playground-bd796.firebaseio.com'
+    })
+    print("Firebase initialized successfully")
+except Exception as e:
+    print(f"Firebase initialization error: {str(e)}")
+    raise
 
 # Read from environment variable
-cred_dict = json.loads(os.getenv('FIREBASE_SERVICE_ACCOUNT_KEY'))
-cred = credentials.Certificate(cred_dict)
+# cred_dict = json.loads(os.getenv('FIREBASE_SERVICE_ACCOUNT_KEY'))
+# cred = credentials.Certificate(cred_dict)
 
-firebase_admin.initialize_app(cred, {
-    'databaseURL': 'https://playground-bd796.firebaseio.com'  # Your database URL
-})
+# firebase_admin.initialize_app(cred, {
+#     'databaseURL': 'https://playground-bd796.firebaseio.com'  # Your database URL
+# })
 
 # Update model loading paths to use absolute paths
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
