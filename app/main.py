@@ -56,8 +56,11 @@ def get_latest_sensor_readings():
     Returns a dictionary with sensor values
     """
     try:
+        
         # Get reference to the RTSensorData node
+        print("Attempting to access Firebase database...")
         ref = db.reference('RTSensorData')
+        print("Successfully got reference to RTSensorData")
         all_data = ref.get()
         print(f"Available data at RTSensorData: {json.dumps(all_data, indent=2)}")
         # Get the device data
