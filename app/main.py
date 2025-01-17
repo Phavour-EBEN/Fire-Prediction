@@ -28,14 +28,6 @@ except Exception as e:
     print(f"Firebase initialization error: {str(e)}")
     raise
 
-# Read from environment variable
-# cred_dict = json.loads(os.getenv('FIREBASE_SERVICE_ACCOUNT_KEY'))
-# cred = credentials.Certificate(cred_dict)
-
-# firebase_admin.initialize_app(cred, {
-#     'databaseURL': 'https://playground-bd796.firebaseio.com'  # Your database URL
-# })
-
 # Update model loading paths to use absolute paths
 base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 model_dir = os.path.join(base_dir, 'models')
@@ -66,6 +58,8 @@ def get_latest_sensor_readings():
     try:
         # Get reference to the RTSensorData node
         ref = db.reference('RTSensorData')
+        all_data = ref.get()
+        print(f"Available data at RTSensorData: {json.dumps(all_data, indent=2)}")
         # Get the device data
         device_data = ref.child('Device uuid:iqD78eGmo7LompLJHfZwm2').get()
         
