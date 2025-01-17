@@ -48,8 +48,6 @@ FEATURE_MAPPING = {
     "co": "CO"
 }
 
-app = Flask(__name__)
-
 def get_latest_sensor_readings():
     """
     Fetch the latest sensor readings from Firebase
@@ -57,8 +55,8 @@ def get_latest_sensor_readings():
     """
     try:
         # Get all sensor data at once
-        sensor_ref = db.child("RTSensorData").child("Device uuid:iqD78eGmo7LompLJHfZwm2").get()
-        data = sensor_ref.val()
+        sensor_ref = db.reference("RTSensorData/Device uuid:iqD78eGmo7LompLJHfZwm2").get()
+        data = sensor_ref
         
         if not data:
             print("No data found")
@@ -179,5 +177,5 @@ def health_check():
     return jsonify({"status": "healthy", "timestamp": datetime.now().isoformat()})
 
 if __name__ == "__main__":
-    app.run()
-    # app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+    # app.run()
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 1000)))
