@@ -56,21 +56,43 @@ def get_latest_sensor_readings():
     Returns a dictionary with sensor values
     """
     try:
-        
-        # Get reference to the RTSensorData node
-        print("Attempting to access Firebase database...")
+        # First, check the root to see what data exists
+        root_ref = db.reference('/')
+        root_data = root_ref.get()
+        print(f"Available paths at root: {list(root_data.keys()) if root_data else 'None'}")
+
+        # Now try to access RTSensorData
         ref = db.reference('RTSensorData')
-        print("Successfully got reference to RTSensorData")
-        all_data = ref.get()
-        print(f"Available data at RTSensorData: {json.dumps(all_data, indent=2)}")
-        # Get the device data
-        device_data = ref.child('Device uuid:iqD78eGmo7LompLJHfZwm2').get()
+        all_sensor_data = ref.get()
+        print(f"Data at RTSensorData: {all_sensor_data}")
+
+        if not all_sensor_data:
+            print("No data found at RTSensorData path")
+            return None
+
+        # List all devices if any
+        if isinstance(all_sensor_data, dict):
+            print(f"Available devices: {list(all_sensor_data.keys())}")
+
+        # Try to get specific device data
+        device_id = 'Device uuid:iqD78eGmo7LompLJHfZwm2'
+        # Try both with and without the 'Device uuid:' prefix
+        device_data = None
         
+        # First try: Full path
+        device_data = ref.child(device_id).get()
+        
+        # Second try: Just the UUID
         if not device_data:
-            print("No data found in Firebase")
+            uuid_only = device_id.split(':')[-1].strip()
+            print(f"Trying with UUID only: {uuid_only}")
+            device_data = ref.child(uuid_only).get()
+
+        if not device_data:
+            print(f"No data found for device ID using either path")
             return None
             
-        print("Retrieved data:", device_data)  # Debug print
+        print(f"Retrieved device data: {device_data}")
             
         # Extract and convert sensor values
         readings = {}
@@ -86,8 +108,12 @@ def get_latest_sensor_readings():
     
     except Exception as e:
         print(f"Error fetching sensor data: {str(e)}")
+        print(f"Error type: {type(e).__name__}")
+        # Print the full traceback for debugging
+        import traceback
+        print(f"Traceback: {traceback.format_exc()}")
         return None
-
+    
 def make_predictions(features_dict):
     """
     Make predictions using both models
