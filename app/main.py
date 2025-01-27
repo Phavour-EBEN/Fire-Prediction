@@ -75,7 +75,8 @@ def get_latest_sensor_readings():
             print(f"Available devices: {list(all_sensor_data.keys())}")
 
         # Try to get specific device data
-        device_id = 'Device uuid:iqD78eGmo7LompLJHfZwm2'
+        # device_id = 'Device uuid:iqD78eGmo7LompLJHfZwm2'
+        device_id = 'Device'
         # Try both with and without the 'Device uuid:' prefix
         device_data = None
         
